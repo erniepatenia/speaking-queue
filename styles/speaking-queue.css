@@ -1,0 +1,26 @@
+.speaking-queue-sidebar {
+    padding: 10px;
+    color: white;
+}
+
+.speaking-queue-sidebar h2 {
+    margin-bottom: 10px;
+}
+
+.speaking-queue-sidebar button {
+    margin: 5px;
+    padding: 5px 10px;
+    font-size: 14px;
+}
+
+.speaking-queue-sidebar #speaking-queue-list ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.speaking-queue-sidebar #speaking-queue-list li {
+    margin: 5px 0;
+    padding: 5px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+}

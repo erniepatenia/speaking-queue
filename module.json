@@ -1,0 +1,13 @@
+{
+    "name": "speaking-queue",
+    "title": "Speaking Queue",
+    "description": "A sidebar module for managing a speaking queue in Foundry VTT.",
+    "version": "1.0.0",
+    "authors": [{ "name": "Your Name", "email": "you@example.com" }],
+    "esmodules": ["scripts/speaking-queue.js"],
+    "styles": ["styles/speaking-queue.css"],
+    "manifest": "https://raw.githubusercontent.com/your-username/foundry-speaking-queue/main/module.json",
+    "download": "https://github.com/your-username/foundry-speaking-queue/archive/refs/heads/main.zip",
+    "compatibleCoreVersion": "10",
+    "minimumCoreVersion": "10"
+}

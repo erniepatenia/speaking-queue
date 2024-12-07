@@ -1,0 +1,14 @@
+<div class="speaking-queue-sidebar">
+    <h2>Speaking Queue</h2>
+    <div id="speaking-queue-controls">
+        <button id="join-queue">Join Queue</button>
+        <button id="leave-queue">Leave Queue</button>
+        <button id="remove-current-speaker">Remove Current Speaker</button>
+        {{#if game.user.isGM}}
+        <button id="clear-queue">Clear Queue</button>
+        {{/if}}
+    </div>
+    <div id="speaking-queue-list">
+        <ul></ul>
+    </div>
+</div>
