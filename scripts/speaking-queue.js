@@ -9,7 +9,7 @@ Hooks.on("ready", () => {
     });
 
     // Register the new sidebar tab
-    SidebarTabs.registeredTabs.push({
+    Sidebar.tabs.push({
         id: "speaking-queue-sidebar",
         title: "Speaking Queue",
         icon: "fas fa-comments", // Icon for the sidebar
