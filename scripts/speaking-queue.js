@@ -1,5 +1,16 @@
 let speakingQueue = [];
 
+Hooks.on("init", () => {
+    // Register the new sidebar tab
+    game.settings.registerMenu("speaking-queue", "speakingQueueSidebar", {
+        name: "Speaking Queue",
+        label: "Open Speaking Queue",
+        icon: "fas fa-comments", // Icon for the sidebar
+        type: SpeakingQueueSidebar,
+        restricted: false,
+    });
+});
+
 Hooks.on("ready", () => {
     // Add socket listener for module actions
     game.socket.on("module.speaking-queue", (data) => {
@@ -8,18 +19,10 @@ Hooks.on("ready", () => {
         }
     });
 
-    // Register the new sidebar tab
-    SidebarTabs.registeredTabs.push({
-        id: "speaking-queue-sidebar",
-        title: "Speaking Queue",
-        icon: "fas fa-comments", // Icon for the sidebar
-        cls: SpeakingQueueSidebar,
-    });
-
-    // Create floating UI controls if not using the sidebar
-    if (!game.user.isGM && !ui.sidebar.visible) {
+    // Add floating UI controls
+    if (!game.user.isGM) {
         createPlayerControlUI();
-    } else if (game.user.isGM) {
+    } else {
         createGMControlUI();
     }
 });
@@ -131,7 +134,7 @@ function updateQueueUI(queue) {
     if (listElement) listElement.innerHTML = `<ul>${queueHTML}</ul>`;
 
     // Sidebar UI update
-    const sidebar = ui.windows.find((app) => app instanceof SpeakingQueueSidebar);
+    const sidebar = ui.sidebar.tabs.get("speaking-queue-sidebar");
     if (sidebar) {
         const list = sidebar.element.find("#speaking-queue-list");
         list.html(queueHTML);
