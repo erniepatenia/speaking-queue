@@ -1,17 +1,8 @@
 let speakingQueue = [];
 
-Hooks.on("init", () => {
-    // Register the new sidebar tab
-    game.settings.registerMenu("speaking-queue", "speakingQueueSidebar", {
-        name: "Speaking Queue",
-        label: "Open Speaking Queue",
-        icon: "fas fa-comments", // Icon for the sidebar
-        type: SpeakingQueueSidebar,
-        restricted: false,
-    });
-});
-
 Hooks.on("ready", () => {
+    ui.sidebar.tabs.set("speaking-queue-sidebar", new SpeakingQueueSidebar());
+
     // Add socket listener for module actions
     game.socket.on("module.speaking-queue", (data) => {
         if (data.action === "updateQueue") {
@@ -84,9 +75,9 @@ function createGMControlUI() {
  */
 class SpeakingQueueSidebar extends SidebarTab {
     static get defaultOptions() {
-        return mergeObject(super.defaultOptions, {
+        return foundry.utils.mergeObject(super.defaultOptions, {
             id: "speaking-queue-sidebar",
-            template: "modules/speaking-queue/templates/speaking-queue.html", // Sidebar template
+            template: "modules/speaking-queue/templates/speaking-queue.html",
             title: "Speaking Queue",
             icon: "fas fa-comments",
         });
