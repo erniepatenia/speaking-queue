@@ -1,8 +1,13 @@
 let speakingQueue = [];
 
+function mylog(msg) {
+    console.log("[mylog]", msg);
+}
+
 Hooks.once('setup', async function() {
     class OverrideSidebar extends CONFIG.ui.sidebar {
       getData(options={}) {
+        mylog("OverrideSidebar getData enter");
         const data = super.getData(options);
         const {chat, combat, ...tabs} = data.tabs;
         const orderedTabs = {
@@ -15,10 +20,12 @@ Hooks.once('setup', async function() {
           ...tabs,
         };
         data.tabs = orderedTabs;
+        mylog("OverrideSidebar getData exit");
         return data;
       }
     }
-  
+
+    mylog("setup assigning OverrideSidebar");
     if (game.user.isGM) {
       CONFIG.ui.queue = SpeakingQueueSidebar;
       CONFIG.ui.sidebar = OverrideSidebar;
@@ -40,14 +47,14 @@ Hooks.on("ready", () => {
  * Floating Player Controls
  */
 function createPlayerControlUI() {
-    const controls = document.createElement("div");
+    /*const controls = document.createElement("div");
     controls.id = "player-speaking-queue-controls";
     controls.innerHTML = `
         <button id="join-queue">Join Queue</button>
         <button id="leave-queue">Leave Queue</button>
         <button id="remove-current-speaker">Remove Current Speaker</button>
     `;
-    document.body.appendChild(controls);
+    document.body.appendChild(controls);*/
 
     // Join Queue
     document.getElementById("join-queue").addEventListener("click", () => {
@@ -69,13 +76,13 @@ function createPlayerControlUI() {
  * Floating GM Controls
  */
 function createGMControlUI() {
-    const controls = document.createElement("div");
+    /*const controls = document.createElement("div");
     controls.id = "gm-speaking-queue-controls";
     controls.innerHTML = `
         <button id="clear-queue">Clear Queue</button>
         <button id="remove-current-speaker">Remove Current Speaker</button>
     `;
-    document.body.appendChild(controls);
+    document.body.appendChild(controls);*/
 
     // Clear Queue
     document.getElementById("clear-queue").addEventListener("click", () => {
@@ -102,17 +109,23 @@ class SpeakingQueueSidebar extends SidebarTab {
         });
     }
 
-    _render() {
-        if (!game.user.isGM) {
+    // THIS doesn't seem to be called
+    // but async _render does
+    render(force=false, options={}) {
+        mylog("SpeakingQueue render enter");
+        super.render(force, options);
+        // FIXME: these cause null-reference errors (unable to find elements)
+        /*if (!game.user.isGM) {
             createPlayerControlUI();
         } else {
             createGMControlUI();
-        }
+        }*/
+       mylog("SpeakingQueue render exit");
     }
 
     activateListeners(html) {
         super.activateListeners(html);
-
+        mylog("SpeakingQueue activateListeners");
         // Join Queue
         html.find("#join-queue").on("click", () => {
             game.socket.emit("module.speaking-queue", { action: "addPlayer", userId: game.user.id });
@@ -134,6 +147,7 @@ class SpeakingQueueSidebar extends SidebarTab {
                 game.socket.emit("module.speaking-queue", { action: "clearQueue" });
             });
         }
+        mylog("SpeakingQueue activateListeners exit");
     }
 }
 
