@@ -1,21 +1,39 @@
 let speakingQueue = [];
 
-Hooks.on("ready", () => {
-    ui.sidebar.tabs.set("speaking-queue-sidebar", new SpeakingQueueSidebar());
+Hooks.once('setup', async function() {
+    class OverrideSidebar extends CONFIG.ui.sidebar {
+      getData(options={}) {
+        const data = super.getData(options);
+        const {chat, combat, ...tabs} = data.tabs;
+        const orderedTabs = {
+          chat,
+          combat,
+          queue: {
+            tooltip: SpeakingQueueSidebar.defaultOptions.tooltip,
+            icon: SpeakingQueueSidebar.defaultOptions.icon
+          },
+          ...tabs,
+        };
+        data.tabs = orderedTabs;
+        return data;
+      }
+    }
+  
+    if (game.user.isGM) {
+      CONFIG.ui.queue = SpeakingQueueSidebar;
+      CONFIG.ui.sidebar = OverrideSidebar;
+    }
+});
 
+
+  
+Hooks.on("ready", () => {
     // Add socket listener for module actions
     game.socket.on("module.speaking-queue", (data) => {
         if (data.action === "updateQueue") {
             updateQueueUI(data.queue);
         }
     });
-
-    // Add floating UI controls
-    if (!game.user.isGM) {
-        createPlayerControlUI();
-    } else {
-        createGMControlUI();
-    }
 });
 
 /**
@@ -79,8 +97,17 @@ class SpeakingQueueSidebar extends SidebarTab {
             id: "speaking-queue-sidebar",
             template: "modules/speaking-queue/templates/speaking-queue.html",
             title: "Speaking Queue",
-            icon: "fas fa-comments",
+            icon: "fas fa-users",
+            tooltip: "Speaking Queue",
         });
+    }
+
+    _render() {
+        if (!game.user.isGM) {
+            createPlayerControlUI();
+        } else {
+            createGMControlUI();
+        }
     }
 
     activateListeners(html) {

@@ -2,7 +2,7 @@
     "name": "speaking-queue",
     "title": "Speaking Queue",
     "description": "A Foundry VTT Sidebar Module for managing a speaking queue.",
-    "version": "0.0.2",
+    "version": "0.0.2a",
     "authors": [{ "name": "Ernie Patenia", "email": "" }],
     "esmodules": ["scripts/speaking-queue.js"],
     "styles": ["styles/speaking-queue.css"],
