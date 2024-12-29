@@ -26,10 +26,10 @@ Hooks.once('setup', async function() {
     }
 
     mylog("setup assigning OverrideSidebar");
-    if (game.user.isGM) {
+    //if (game.user.isGM) {
       CONFIG.ui.queue = SpeakingQueueSidebar;
       CONFIG.ui.sidebar = OverrideSidebar;
-    }
+    //}
 });
 
 
@@ -64,11 +64,6 @@ function createPlayerControlUI() {
     // Leave Queue
     document.getElementById("leave-queue").addEventListener("click", () => {
         game.socket.emit("module.speaking-queue", { action: "removePlayer", userId: game.user.id });
-    });
-
-    // Remove Current Speaker
-    document.getElementById("remove-current-speaker").addEventListener("click", () => {
-        game.socket.emit("module.speaking-queue", { action: "removeCurrent" });
     });
 }
 
@@ -114,12 +109,13 @@ class SpeakingQueueSidebar extends SidebarTab {
     render(force=false, options={}) {
         mylog("SpeakingQueue render enter");
         super.render(force, options);
-        // FIXME: these cause null-reference errors (unable to find elements)
-        /*if (!game.user.isGM) {
+
             createPlayerControlUI();
-        } else {
+
+        if (game.user.isGM) {
             createGMControlUI();
-        }*/
+        }
+
        mylog("SpeakingQueue render exit");
     }
 
@@ -136,15 +132,15 @@ class SpeakingQueueSidebar extends SidebarTab {
             game.socket.emit("module.speaking-queue", { action: "removePlayer", userId: game.user.id });
         });
 
-        // Remove Current Speaker
-        html.find("#remove-current-speaker").on("click", () => {
-            game.socket.emit("module.speaking-queue", { action: "removeCurrent" });
-        });
-
         if (game.user.isGM) {
             // Clear Queue
             html.find("#clear-queue").on("click", () => {
                 game.socket.emit("module.speaking-queue", { action: "clearQueue" });
+            });
+
+            // Remove Current Speaker
+            html.find("#remove-current-speaker").on("click", () => {
+                game.socket.emit("module.speaking-queue", { action: "removeCurrent" });
             });
         }
         mylog("SpeakingQueue activateListeners exit");
